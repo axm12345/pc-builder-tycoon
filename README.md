@@ -1,52 +1,55 @@
-# PC Builder Tycoon — v1 (MVP)
+# PC Builder Tycoon (Roblox game, v1)
 
-This is a working core loop: **buy parts → assemble a PC → clients message you
-with jobs → deliver builds that meet their specs → earn cash → repeat.**
-Room-building is intentionally left out of v1 so we can get the hustle loop
-solid first, then layer the room/aesthetic side on top.
+**A Roblox tycoon game about running a PC-building business: buy parts, build PCs, take jobs from clients who message you, and earn enough to afford better parts.**
 
-## What's in this pack
+I've built my own PCs in real life, so I wanted a game that captures the fun part: picking parts and showing off the build.
 
-| File | Where it goes in Roblox Studio | Type |
+## How the game plays
+
+```
+Buy parts in the Shop ─► Equip them into your build ─► A client messages you with a job
+        ▲                                                        │
+        └──────────── get paid, buy better parts ◄── deliver a build that meets their specs
+```
+
+- **20 parts in 5 categories** (CPU, GPU, RAM, Case, RGB lighting), each with 4 tiers from free starter parts up to flagship parts like the "RTX Overkill 5090 Ti".
+- **Two stats per build:** **Power** (CPU, GPU, RAM) and **Style** (case, RGB, plus a bit from the others).
+- **Client jobs:** 8 different clients, each caring about power, style or both. For example, *"I need a PC for streaming, doesn't need to be crazy powerful but it HAS to look good on camera."* The required scores grow as you progress.
+- **Saves your progress** (cash, owned parts, current build) automatically every 2 minutes and when you leave.
+
+## How it's built
+
+| File | Runs on | Job |
 |---|---|---|
-| `ReplicatedStorage_PCPartsData.lua` | `ReplicatedStorage` → rename to `PCPartsData` | ModuleScript |
-| `ReplicatedStorage_RequestsData.lua` | `ReplicatedStorage` → rename to `RequestsData` | ModuleScript |
-| `ServerScriptService_Main.lua` | `ServerScriptService` → rename to `Main` | Script |
-| `StarterPlayerScripts_ClientUI.lua` | `StarterPlayer > StarterPlayerScripts` → rename to `ClientUI` | LocalScript |
+| `ReplicatedStorage_PCPartsData.lua` | Shared | Every part's name, price, Power and Style |
+| `ReplicatedStorage_RequestsData.lua` | Shared | Client message templates |
+| `ServerScriptService_Main.lua` | Server | Money, purchases, job checks, saving (DataStoreService), and the RemoteEvents the client talks to |
+| `StarterPlayerScripts_ClientUI.lua` | Player | The Shop / My Build / Requests panel |
 
-## Setup steps (5 minutes)
+All money and job checks happen on the server, so players can't give themselves cash from their own client.
 
-1. Open Roblox Studio, create a new **Baseplate** place (or use your existing one).
-2. In the Explorer:
-   - Right-click **ReplicatedStorage** → Insert Object → **ModuleScript**. Paste in the contents of `ReplicatedStorage_PCPartsData.lua`, rename it `PCPartsData`.
-   - Do the same for `ReplicatedStorage_RequestsData.lua` → `RequestsData`.
-   - Right-click **ServerScriptService** → Insert Object → **Script**. Paste `ServerScriptService_Main.lua`, rename it `Main`.
-   - Right-click **StarterPlayer > StarterPlayerScripts** → Insert Object → **LocalScript**. Paste `StarterPlayerScripts_ClientUI.lua`, rename it `ClientUI`.
-3. **Turn on DataStores in Studio** (or saving won't work while testing):
-   `Home` tab → `Game Settings` → `Security` → enable **"Enable Studio Access to API Services"**.
-4. Press **Play**. You should see a panel at the bottom-center with **Shop / My Build / Requests** tabs.
+**Tech:** Lua (Luau) · Roblox Studio · DataStoreService · RemoteEvents
 
-## How the loop works right now
+## Play it in Roblox Studio (5 minutes)
 
-- Everyone starts with $200 and the free ("budget") part in every category.
-- **Shop tab**: buy better CPU/GPU/RAM/Case/RGB parts, then hit **Equip** to put them in your current build.
-- **My Build tab**: shows your current Power and Style totals.
-- **Requests tab**: a random client messages you (auto-triggers ~5 seconds after joining, and again a few seconds after you deliver one). Each request needs a minimum Power and/or Style score. Hit **Deliver Build** — if your currently equipped parts meet the bar, you get paid and a new request comes in.
-- Progress (cash + owned parts + equipped build) autosaves every 2 minutes and on leave.
+1. Open Roblox Studio and create a new **Baseplate** place.
+2. In the Explorer, add each file as the right script type and rename it:
 
-## Known intentional simplifications (v1)
+   | File | Put it in | Script type | Rename to |
+   |---|---|---|---|
+   | `ReplicatedStorage_PCPartsData.lua` | ReplicatedStorage | ModuleScript | `PCPartsData` |
+   | `ReplicatedStorage_RequestsData.lua` | ReplicatedStorage | ModuleScript | `RequestsData` |
+   | `ServerScriptService_Main.lua` | ServerScriptService | Script | `Main` |
+   | `StarterPlayerScripts_ClientUI.lua` | StarterPlayer › StarterPlayerScripts | LocalScript | `ClientUI` |
 
-- No 3D PC model or room yet — this is the economy/loop skeleton so we can validate it's fun before investing in art/animation.
-- Only one active request at a time, no request queue/expiry timer yet.
-- No monetization (Robux products) wired up yet.
+3. To make saving work while testing: **Home → Game Settings → Security → Enable Studio Access to API Services**.
+4. Press **Play**. A panel with **Shop / My Build / Requests** tabs appears at the bottom of the screen.
 
-## Natural next steps, in order I'd suggest tackling them
+## What's next
 
-1. **Playtest the loop** — is buying/equipping/delivering satisfying on its own, before any art exists?
-2. **3D PC model** — swap parts visually (different case meshes, GPU with light-up textures, RGB emitting `PointLight`/`SurfaceLight` instances) so "equip" actually changes what your character sees.
-3. **Room building** — a separate build-mode where players place furniture/wall colors/LED strips from an inventory, similar structure to the parts system here (a `RoomItemsData` module + placement remotes).
-4. **Request variety/expiry** — timers, a queue of 2-3 requests at once, occasional "VIP" clients with huge rewards but tight requirements.
-5. **Monetization** — Developer Products for "rush order" (skip the 5s cooldown), cosmetic-only RGB/case skins as Robux purchases, a "double cash" gamepass.
-6. **Social hook** — a "showroom" server or plot where players can walk through builds/rooms other players made, since showing off drives shares (this is the single biggest viral lever based on what's working on Roblox right now).
+v1 is the core money loop on purpose, so I can check it's fun before adding art. Planned next:
 
-Bring this back any time you want to add room-building, a real 3D part-swapping system, or monetization, and we'll build the next layer on top of this same structure.
+1. **3D PC model** where equipping a part visibly changes the PC (glowing GPU, RGB lights, different cases).
+2. **Room building:** decorate your setup with furniture, wall colours and LED strips.
+3. **More jobs:** several requests at once, timers, and rare "VIP" clients with big rewards.
+4. **Showroom:** walk through other players' builds.
