@@ -2,6 +2,8 @@
 
 **A Roblox tycoon game about running a PC-building business: buy parts, build PCs, take jobs from clients who message you, and earn enough to afford better parts.**
 
+> **Status: playable v1 prototype.** The core game loop works end to end and saves your progress. It doesn't have 3D PC models or room building yet. Those are next (see [What's next](#whats-next)).
+
 I've built my own PCs in real life, so I wanted a game that captures the fun part: picking parts and showing off the build.
 
 ## How the game plays
