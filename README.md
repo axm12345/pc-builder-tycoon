@@ -32,21 +32,6 @@ All money and job checks happen on the server, so players can't give themselves 
 
 **Tech:** Lua (Luau) · Roblox Studio · DataStoreService · RemoteEvents
 
-## Play it in Roblox Studio (5 minutes)
-
-1. Open Roblox Studio and create a new **Baseplate** place.
-2. In the Explorer, add each file as the right script type and rename it:
-
-   | File | Put it in | Script type | Rename to |
-   |---|---|---|---|
-   | `ReplicatedStorage_PCPartsData.lua` | ReplicatedStorage | ModuleScript | `PCPartsData` |
-   | `ReplicatedStorage_RequestsData.lua` | ReplicatedStorage | ModuleScript | `RequestsData` |
-   | `ServerScriptService_Main.lua` | ServerScriptService | Script | `Main` |
-   | `StarterPlayerScripts_ClientUI.lua` | StarterPlayer › StarterPlayerScripts | LocalScript | `ClientUI` |
-
-3. To make saving work while testing: **Home → Game Settings → Security → Enable Studio Access to API Services**.
-4. Press **Play**. A panel with **Shop / My Build / Requests** tabs appears at the bottom of the screen.
-
 ## What's next
 
 v1 is the core money loop on purpose, so I can check it's fun before adding art. Planned next:
